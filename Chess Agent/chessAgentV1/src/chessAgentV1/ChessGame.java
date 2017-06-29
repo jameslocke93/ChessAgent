@@ -137,7 +137,7 @@ public class ChessGame {
 		default:
 			break;
 		}
-		
+
 		return false;
 	}
 
@@ -145,7 +145,7 @@ public class ChessGame {
 	private boolean move(int position, int destination) {
 		board[destination] = board[position];
 		board[position] = BLANK;
-		
+
 		return true;
 	}
 
@@ -227,18 +227,14 @@ public class ChessGame {
 
 		if (board[position] == WHITE_PAWN) {
 			// Then white pawn single move is allowed
-			if (board[destination] >= BLACK_PAWN) {
-				// Legal Take
-			} else if (board[destination] == BLANK) {
+			if (board[destination] == BLANK) {
 				if (destination == position + 8) {
 					return move(position, destination);
 				}
 			}
 		} else {
 			// Black pawn single move is allowed
-			if (board[destination] <= WHITE_QUEEN && board[destination] > BLANK) {
-				// Legal Take
-			} else if (board[destination] == BLANK) {
+			if (board[destination] == BLANK) {
 				if (destination == position - 8) {
 					return move(position, destination);
 				}
@@ -248,6 +244,122 @@ public class ChessGame {
 	}
 
 	private boolean moveRook(int position, int destination) {
+
+		// Checks to see if the pawn belongs to the current player
+		if (board[position] == WHITE_ROOK && currentPlayer != WHITE_PLAYER) {
+			return false;
+		} else if (board[position] == BLACK_ROOK && currentPlayer != BLACK_PLAYER) {
+			return false;
+		}
+
+		boolean blocked = false;
+		// Check if the movement is forward/backwards
+		if (position % 8 == destination % 8) {
+			if (position < destination) {
+				for (int i = position + 1; i < destination; i++) {
+					if (i % 8 == position % 8) {
+						if (board[i] != BLANK) {
+							blocked = true;
+						}
+					}
+				}
+			} else {
+				for (int i = position - 1; i > destination; i--) {
+					if (i % 8 == position % 8) {
+						if (board[i] != BLANK) {
+							blocked = true;
+						}
+					}
+				}
+			}
+		} else if (position >= 56) {
+			if (destination < 56 + 8) {
+				for (int i = position + 1; i < destination; i++) {
+					if (board[i] != BLANK) {
+						blocked = true;
+					}
+				}
+			} else {
+				return false;
+			}
+		} else if (position >= 48) {
+			if (destination < 48 + 8) {
+				for (int i = position + 1; i < destination; i++) {
+					if (board[i] != BLANK) {
+						blocked = true;
+					}
+				}
+			} else {
+				return false;
+			}
+		} else if (position >= 40) {
+			if (destination < 40 + 8) {
+				for (int i = position + 1; i < destination; i++) {
+					if (board[i] != BLANK) {
+						blocked = true;
+					}
+				}
+			} else {
+				return false;
+			}
+		} else if (position >= 32) {
+			if (destination < 32 + 8) {
+				for (int i = position + 1; i < destination; i++) {
+					if (board[i] != BLANK) {
+						System.out.println(i);
+						blocked = true;
+					}
+				}
+			} else {
+				return false;
+			}
+		} else if (position >= 24) {
+			if (destination < 24 + 8) {
+				for (int i = position + 1; i < destination; i++) {
+					if (board[i] != BLANK) {
+						blocked = true;
+					}
+				}
+			} else {
+				return false;
+			}
+		} else if (position >= 16) {
+			if (destination < 16 + 8) {
+				for (int i = position + 1; i < destination; i++) {
+					if (board[i] != BLANK) {
+						blocked = true;
+					}
+				}
+			} else {
+				return false;
+			}
+		} else if (position >= 8) {
+			if (destination < 8 + 8) {
+				for (int i = position + 1; i < destination; i++) {
+					if (board[i] != BLANK) {
+						blocked = true;
+					}
+				}
+			} else {
+				return false;
+			}
+		} else {
+			if (destination < 0 + 8) {
+				for (int i = position + 1; i < destination; i++) {
+					if (board[i] != BLANK) {
+						blocked = true;
+					}
+				}
+			} else {
+				return false;
+			}
+		}
+
+		if (!blocked) {
+			move(position, destination);
+			return true;
+		}
+
 		return false;
 	}
 
