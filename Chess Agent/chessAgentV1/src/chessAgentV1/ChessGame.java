@@ -105,93 +105,110 @@ public class ChessGame {
 	}
 
 	// The publicly accessible move function
-	public void moveCheck(int position, int destination) {
+	public boolean moveCheck(int position, int destination) {
 
 		// Check if position and destination are within bounds and not empty
 		if (position < 0 | position > board.length) {
-			return;
+			return false;
 		}
 		if (destination < 0 | position > board.length) {
-			return;
+			return false;
 		}
 		// Checks to see what piece is in the position
 		switch (board[position]) {
 		case WHITE_PAWN:
 		case BLACK_PAWN:
-			movePawn(position, destination);
-			break;
+			return movePawn(position, destination);
 		case WHITE_ROOK:
 		case BLACK_ROOK:
-			moveRook(position, destination);
-			break;
+			return moveRook(position, destination);
 		case WHITE_BISHOP:
 		case BLACK_BISHOP:
-			moveBishop(position, destination);
-			break;
+			return moveBishop(position, destination);
 		case WHITE_KNIGHT:
 		case BLACK_KNIGHT:
-			moveKnight(position, destination);
-			break;
+			return moveKnight(position, destination);
 		case WHITE_KING:
 		case BLACK_KING:
-			moveKing(position, destination);
-			break;
+			return moveKing(position, destination);
 		case WHITE_QUEEN:
 		case BLACK_QUEEN:
-			moveQueen(position, destination);
-			break;
+			return moveQueen(position, destination);
 		default:
 			break;
 		}
-
+		
+		return false;
 	}
 
 	// Conduct the move
-	private void move(int position, int destination) {
-
+	private boolean move(int position, int destination) {
+		board[destination] = board[position];
+		board[position] = BLANK;
+		
+		return true;
 	}
 
 	// Each individual piece move function that is only accessed by public move
-	private void movePawn(int position, int destination) {
+	private boolean movePawn(int position, int destination) {
 
 		// Checks to see if the pawn belongs to the current player
 		if (board[position] == WHITE_PAWN && currentPlayer != WHITE_PLAYER) {
-			return;
+			return false;
 		} else if (board[position] == BLACK_PAWN && currentPlayer != BLACK_PLAYER) {
-			return;
+			return false;
 		}
 
 		int rowPosition = position % 8;
-		
-		
-		
+
+		if (currentPlayer == WHITE_PLAYER && board[destination] >= BLACK_PAWN) {
+			// Legal take
+			if (rowPosition == 0) {
+				if (destination == position + 9) {
+					return move(position, destination);
+				}
+			} else if (rowPosition == 7) {
+				if (destination == position + 7) {
+					return move(position, destination);
+				}
+			} else {
+				if (destination == position + 7) {
+					return move(position, destination);
+				} else if (destination == position + 9) {
+					return move(position, destination);
+				}
+			}
+		} else if (currentPlayer == BLACK_PLAYER && board[destination] <= WHITE_QUEEN && board[destination] > BLANK) {
+			// Legal take
+			if (rowPosition == 0) {
+				if (destination == position - 7) {
+					return move(position, destination);
+				}
+			} else if (rowPosition == 7) {
+				if (destination == position - 9) {
+					return move(position, destination);
+				}
+			} else {
+				if (destination == position - 7) {
+					return move(position, destination);
+				} else if (destination == position - 9) {
+					return move(position, destination);
+				}
+			}
+		}
+
 		int firstMoveArrayPosition = 0;
-		
+
 		// Check to see if this is a double or single move
 		if (position >= 8 && position <= 15) {
 			firstMoveArrayPosition = position % 8;
 			if (firstMoves[firstMoveArrayPosition]) {
 				// Then white pawn double move is allowed
-				if (board[destination] >= BLACK_PAWN) {
-					// Legal take
-					if (rowPosition == 0) {
-						if (destination == position + 9) {
-							take(position, destination);
-						} else if (rowPosition == 7) {
-							if (destination == position + 7) {
-								take(position, destination);
-							}
-						} else {
-							if (destination == position + 7) {
-								take(position, destination);
-							} else if (destination == position + 9) {
-								take(position, destination);
-							}
-						}
-					}
-				} else if (board[destination] == BLANK) {
+				if (board[destination] == BLANK) {
 					if (destination == position + 8 || destination == position + 16) {
-						move(position, destination);
+						// Change it so that its first move is now false
+						firstMoves[firstMoveArrayPosition] = false;
+						return move(position, destination);
 					}
 				}
 			}
@@ -199,26 +216,10 @@ public class ChessGame {
 			firstMoveArrayPosition = (position % 8) + 8;
 			if (firstMoves[firstMoveArrayPosition]) {
 				// Then black pawn double move is allowed
-				if (board[destination] <= WHITE_QUEEN && board[destination] > BLANK) {
-					// Legal take
-					if(rowPosition == 0){
-						if(destination == position - 7){
-							take(position, destination);
-						}
-					} else if(rowPosition == 7){
-						if(destination == position - 9){
-							take(position, destination);
-						}
-					} else {
-						if (destination == position - 7) {
-							take(position, destination);
-						} else if (destination == position - 9) {
-							take(position, destination);
-						}
-					}
-				} else if (board[destination] == BLANK) {
+				if (board[destination] == BLANK) {
 					if (destination == position - 8 || destination == position - 16) {
-						move(position, destination);
+						firstMoves[firstMoveArrayPosition] = false;
+						return move(position, destination);
 					}
 				}
 			}
@@ -230,7 +231,7 @@ public class ChessGame {
 				// Legal Take
 			} else if (board[destination] == BLANK) {
 				if (destination == position + 8) {
-					move(position, destination);
+					return move(position, destination);
 				}
 			}
 		} else {
@@ -239,31 +240,31 @@ public class ChessGame {
 				// Legal Take
 			} else if (board[destination] == BLANK) {
 				if (destination == position - 8) {
-					move(position, destination);
+					return move(position, destination);
 				}
 			}
 		}
-
+		return false;
 	}
 
-	private void moveRook(int position, int destination) {
-
+	private boolean moveRook(int position, int destination) {
+		return false;
 	}
 
-	private void moveBishop(int position, int destination) {
-
+	private boolean moveBishop(int position, int destination) {
+		return false;
 	}
 
-	private void moveKnight(int position, int destination) {
-
+	private boolean moveKnight(int position, int destination) {
+		return false;
 	}
 
-	private void moveKing(int position, int destination) {
-
+	private boolean moveKing(int position, int destination) {
+		return false;
 	}
 
-	private void moveQueen(int position, int destination) {
-
+	private boolean moveQueen(int position, int destination) {
+		return false;
 	}
 
 	// Checks for pieces being taken
@@ -290,5 +291,13 @@ public class ChessGame {
 
 	public int[] getBoard() {
 		return board;
+	}
+
+	public void setBoard(int[] board) {
+		this.board = board;
+	}
+
+	public void setPlayer(int player) {
+		currentPlayer = player;
 	}
 }
