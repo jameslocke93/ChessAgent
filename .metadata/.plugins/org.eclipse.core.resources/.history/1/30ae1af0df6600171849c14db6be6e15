@@ -1,0 +1,6 @@
+package chessAgentV1;
+
+public class Move {
+	public int position;
+	public int destination;
+}

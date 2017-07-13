@@ -1,0 +1,16 @@
+package chessAgentV1;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+public class TestQueen {
+
+	private ChessGame testGame = new ChessGame();
+	
+	@Test
+	public void test() {
+		fail("Not yet implemented");
+	}
+
+}
