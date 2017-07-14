@@ -522,9 +522,18 @@ public class TestRules {
 		testGame.setBoard(board);testGame.moveList(testGame);
 	}
 	
-	/*@Test
+	@Test
 	public void startingMoveList(){
+		
+		ArrayList<Move> moves = new ArrayList<Move>();
+		
 		testGame.setupBoard();
-		testGame.moveList(testGame);
-	}*/
+		testGame.setPlayer(ChessGame.BLACK_PLAYER);
+		moves = testGame.moveList(testGame);
+
+		for(int i = 0; i < moves.size(); i++){
+			System.out.println(moves.get(i).position + " " + moves.get(i).destination);
+		}
+		
+	}
 }

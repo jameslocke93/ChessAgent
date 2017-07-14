@@ -767,7 +767,7 @@ public class ChessGame {
 					}
 				}
 			}
-			
+
 			if (!blocked) {
 				return move(position, destination);
 			}
@@ -1229,6 +1229,378 @@ public class ChessGame {
 
 						break;
 					case WHITE_KING:
+
+						if (i == 4) {
+							if (board[0] == WHITE_ROOK) {
+								if (testGame.moveCheck(i, 0)) {
+									moveList.add(new Move(i, 0));
+									testGame = testGame.setGame(game);
+								}
+							}
+							if (board[7] == WHITE_ROOK) {
+								if (testGame.moveCheck(i, 7)) {
+									moveList.add(new Move(i, 7));
+									testGame = testGame.setGame(game);
+								}
+							}
+						}
+
+						for (int moves = 0; moves < kingMoveSet.length; moves++) {
+							if (testGame.moveCheck(i, i + kingMoveSet[moves])) {
+								moveList.add(new Move(i, i + kingMoveSet[moves]));
+								testGame = testGame.setGame(game);
+							}
+							if (testGame.moveCheck(i, i - kingMoveSet[moves])) {
+								moveList.add(new Move(i, i - kingMoveSet[moves]));
+								testGame = testGame.setGame(game);
+							}
+						}
+						break;
+					default:
+						break;
+					}
+				}
+			}
+		} else {
+			for (int i = 0; i < testGame.getBoard().length; i++) {
+
+				int rowPosition = i % 8;
+
+				if (testGame.getBoard()[i] >= BLACK_PAWN) {
+					switch (testGame.getBoard()[i]) {
+					case BLACK_PAWN:
+						for (int moves = 0; moves < pawnMoveSet.length; moves++) {
+							if (testGame.moveCheck(i, i - pawnMoveSet[moves])) {
+								moveList.add(new Move(i, i - pawnMoveSet[moves]));
+								testGame = testGame.setGame(game);
+							}
+						}
+						break;
+					case BLACK_ROOK:
+						for (int pos = i + 1; pos < board.length; pos++) {
+							if (pos % 8 == i % 8) {
+								if (testGame.getBoard()[pos] == BLANK) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] >= BLACK_PAWN) {
+									break;
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									break;
+								}
+							}
+						}
+						for (int pos = i - 1; pos >= 0; pos--) {
+							if (pos % 8 == i % 8) {
+								if (testGame.getBoard()[pos] == BLANK) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] >= BLACK_PAWN) {
+									break;
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									break;
+								}
+							}
+						}
+						if (rowPosition == 0) {
+							for (int pos = i + 1; pos < ((i - rowPosition) + 8); pos++) {
+								if (testGame.getBoard()[pos] == BLANK) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] >= BLACK_PAWN) {
+									break;
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									break;
+								}
+							}
+						} else if (rowPosition == 7) {
+							for (int pos = i - 1; pos >= (i - rowPosition); pos--) {
+								if (testGame.getBoard()[pos] == BLANK) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] >= BLACK_PAWN) {
+									break;
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									break;
+								}
+							}
+						} else {
+							for (int pos = i + 1; pos < ((i - rowPosition) + 8); pos++) {
+								if (testGame.getBoard()[pos] == BLANK) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] >= BLACK_PAWN) {
+									break;
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									break;
+								}
+							}
+							for (int pos = i - 1; pos >= (i - rowPosition); pos--) {
+								if (testGame.getBoard()[pos] == BLANK) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] >= BLACK_PAWN) {
+									break;
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									break;
+								}
+							}
+						}
+						break;
+
+					case BLACK_BISHOP:
+						checkNine = true;
+						checkSeven = true;
+
+						for (int pos = i + 1; pos < testGame.getBoard().length; pos++) {
+							if (pos % 9 == i % 9 && checkNine) {
+								if (testGame.moveCheck(i, pos)) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] >= BLACK_PAWN) {
+									checkNine = false;
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									break;
+								}
+								if (pos % 8 == 7) {
+									checkNine = false;
+								}
+							} else if (pos % 7 == i % 7 && checkSeven) {
+								if (testGame.moveCheck(i, pos)) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] >= BLACK_PAWN) {
+									checkSeven = false;
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									break;
+								}
+								if (pos % 8 == 0) {
+									checkSeven = false;
+								}
+							}
+						}
+
+						checkNine = true;
+						checkSeven = true;
+
+						for (int pos = i - 1; pos >= 0; pos--) {
+							if (pos % 9 == i % 9 && checkNine) {
+								if (testGame.moveCheck(i, pos)) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] >= BLACK_PAWN) {
+									checkNine = false;
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									break;
+								}
+								if (pos % 8 == 0) {
+									checkNine = false;
+								}
+							} else if (pos % 7 == i % 7 && checkSeven) {
+								if (testGame.moveCheck(i, pos)) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] >= BLACK_PAWN) {
+									checkSeven = false;
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									break;
+								}
+								if (pos % 8 == 7) {
+									checkSeven = false;
+								}
+							}
+						}
+						break;
+					case BLACK_KNIGHT:
+						for (int moves = 0; moves < knightMoveSet.length; moves++) {
+							if (testGame.moveCheck(i, i + knightMoveSet[moves])) {
+								moveList.add(new Move(i, i + knightMoveSet[moves]));
+								testGame = testGame.setGame(game);
+							}
+							if (testGame.moveCheck(i, i - knightMoveSet[moves])) {
+								moveList.add(new Move(i, i - knightMoveSet[moves]));
+								testGame = testGame.setGame(game);
+							}
+						}
+						break;
+					case BLACK_QUEEN:
+						checkNine = true;
+						checkSeven = true;
+						checkEight = true;
+
+						for (int pos = i + 1; pos < testGame.getBoard().length; pos++) {
+
+							if (i % 8 == 0) {
+								checkSeven = false;
+							}
+
+							if (pos % 9 == i % 9 && checkNine) {
+								if (testGame.moveCheck(i, pos)) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] >= BLACK_PAWN) {
+									checkNine = false;
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									checkNine = false;
+								}
+								if (pos % 8 == 7) {
+									checkNine = false;
+								}
+							} else if (pos % 8 == i % 8 && checkEight) {
+								if (testGame.moveCheck(i, pos)) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] >= BLACK_PAWN) {
+									checkEight = false;
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									checkEight = false;
+								}
+							} else if (pos % 7 == i % 7 && checkSeven) {
+								if (testGame.moveCheck(i, pos)) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] >= BLACK_PAWN) {
+									checkSeven = false;
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									checkSeven = false;
+								}
+								if (pos % 8 == 0) {
+									checkSeven = false;
+								}
+							}
+						}
+
+						checkNine = true;
+						checkSeven = true;
+						checkEight = true;
+
+						for (int pos = i - 1; pos >= 0; pos--) {
+							if (i % 8 == 7) {
+								checkSeven = false;
+							}
+
+							if (pos % 9 == i % 9 && checkNine) {
+								if (testGame.moveCheck(i, pos)) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] >= BLACK_PAWN) {
+									checkNine = false;
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									checkNine = false;
+								}
+								if (pos % 8 == 7) {
+									checkNine = false;
+								}
+							} else if (pos % 8 == i % 8 && checkEight) {
+								if (testGame.moveCheck(i, pos)) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] >= BLACK_PAWN) {
+									checkEight = false;
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									checkEight = false;
+								}
+							} else if (pos % 7 == i % 7 && checkSeven) {
+								if (testGame.moveCheck(i, pos)) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] >= BLACK_PAWN) {
+									checkSeven = false;
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									checkSeven = false;
+								}
+								if (pos % 8 == 7) {
+									checkSeven = false;
+								}
+							}
+						}
+
+						if (rowPosition == 0) {
+							for (int pos = i + 1; pos < ((i - rowPosition) + 8); pos++) {
+								if (testGame.moveCheck(i, pos)) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] >= BLACK_PAWN) {
+									break;
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									break;
+								}
+							}
+						} else if (rowPosition == 7) {
+							for (int pos = i - 1; pos >= (i - rowPosition); pos--) {
+								if (testGame.moveCheck(i, pos)) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] >= BLACK_PAWN) {
+									break;
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									break;
+								}
+							}
+						} else {
+							for (int pos = i + 1; pos < ((i - rowPosition) + 8); pos++) {
+								if (testGame.moveCheck(i, pos)) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] >= BLACK_PAWN) {
+									break;
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									break;
+								}
+							}
+							for (int pos = i - 1; pos >= (i - rowPosition); pos--) {
+								if (testGame.moveCheck(i, pos)) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] >= BLACK_PAWN) {
+									break;
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									break;
+								}
+							}
+						}
+
+						break;
+					case BLACK_KING:
 
 						if (i == 4) {
 							if (board[0] == WHITE_ROOK) {
