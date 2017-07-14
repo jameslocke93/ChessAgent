@@ -32,6 +32,8 @@ public class ChessGame {
 	private int turncounter;
 
 	private int[] pawnMoveSet;
+	private int[] knightMoveSet;
+	private int[] kingMoveSet;
 
 	public ChessGame() {
 		board = new int[64];
@@ -41,6 +43,8 @@ public class ChessGame {
 		pawnTurncounter = new int[16];
 
 		pawnMoveSet = new int[] { 8, 16, 7, 9 };
+		knightMoveSet = new int[] { 15, 17, 10, 6 };
+		kingMoveSet = new int[] { 1, 7, 8, 9 };
 
 		setupBoard();
 	}
@@ -634,213 +638,137 @@ public class ChessGame {
 	private boolean moveQueen(int position, int destination) {
 
 		int rowPosition = position % 8;
-		int distance = position - destination;
 
-		if (rowPosition == 0) {
-			if (distance % 9 == 0) {
-				if (position > destination) {
-					return false;
-				}
-			} else if (distance % 7 == 0) {
-				if (position < destination) {
-					return false;
-				}
-			}
-		} else if (rowPosition == 7) {
-			if (distance % 9 == 0) {
-				if (position < destination) {
-					return false;
-				}
-			} else if (distance % 7 == 0) {
-				if (position > destination) {
-					return false;
-				}
-			}
-		}
+		if (destination >= (position - rowPosition) && destination < ((position - rowPosition) + 8)) {
 
-		if (distance % 7 == 0) {
+			boolean blocked = false;
+
 			if (position < destination) {
-				for (int i = position + 1; i < destination; i++) {
+				int i = position + 1;
+				while (!blocked && i < destination) {
 					if (board[i] != BLANK) {
-						return false;
+						blocked = true;
 					}
+					i++;
 				}
-				return move(position, destination);
 			} else {
-				for (int i = position - 1; i > destination; i--) {
+				int i = position - 1;
+				while (!blocked && i > destination) {
 					if (board[i] != BLANK) {
-						return false;
+						blocked = true;
 					}
+					i--;
 				}
 			}
-		} else if (distance % 9 == 0) {
-			if (position < destination) {
-				for (int i = position + 1; i < destination; i++) {
-					if (board[i] != BLANK) {
-						return false;
-					}
-				}
-				return move(position, destination);
-			} else {
-				for (int i = position - 1; i > destination; i--) {
-					if (board[i] != BLANK) {
-						return false;
-					}
-				}
-				return move(position, destination);
-			}
-		} else if (distance % 8 == 0) {
-			if (position < destination) {
-				for (int i = position + 1; i < destination; i++) {
-					if (board[i] != BLANK) {
-						return false;
-					}
-				}
-				return move(position, destination);
-			} else {
-				for (int i = position - 1; i > destination; i--) {
-					if (board[i] != BLANK) {
-						return false;
-					}
-				}
+
+			if (!blocked) {
 				return move(position, destination);
 			}
 		}
 
-		if (position >= 56 && destination >= 56) {
-			if (destination < 56 + 7) {
+		if (position % 9 == destination % 9) {
+			if (rowPosition == 7) {
 				if (position < destination) {
-					for (int i = position + 1; i < destination; i++) {
-						if (board[i] != BLANK) {
-							return false;
-						}
-					}
-				} else {
-					for (int i = position - 1; i > destination; i--) {
-						if (board[i] != BLANK) {
-							return false;
-						}
-					}
+					return false;
 				}
+			} else if (rowPosition == 0) {
+				if (position > destination) {
+					return false;
+				}
+			}
+
+			boolean blocked = false;
+			int i = 0;
+
+			if (position < destination) {
+				i = position + 1;
+				while (!blocked && i < destination) {
+					if (i % 9 == destination % 9) {
+						if (board[i] != BLANK) {
+							blocked = true;
+						}
+					}
+					i++;
+				}
+			} else {
+				i = position - 1;
+				while (!blocked && i > destination) {
+					if (i % 9 == position % 9) {
+						if (board[i] != BLANK) {
+							blocked = true;
+						}
+					}
+					i--;
+				}
+			}
+
+			if (!blocked) {
 				return move(position, destination);
 			}
-		} else if (position >= 48 && destination >= 48) {
-			if (destination < 48 + 7) {
-				if (position < destination) {
-					for (int i = position + 1; i < destination; i++) {
+
+		} else if (position % 8 == destination % 8) {
+			boolean blocked = false;
+			int i = 0;
+
+			if (position < destination) {
+				i = position + 1;
+				while (!blocked && i < destination) {
+					if (i % 8 == destination % 8) {
 						if (board[i] != BLANK) {
-							return false;
+							blocked = true;
 						}
 					}
-				} else {
-					for (int i = position - 1; i > destination; i--) {
-						if (board[i] != BLANK) {
-							return false;
-						}
-					}
+					i++;
 				}
+			} else {
+				i = position - 1;
+				while (!blocked && i > destination) {
+					if (i % 8 == position % 8) {
+						if (board[i] != BLANK) {
+							blocked = true;
+						}
+					}
+					i--;
+				}
+			}
+
+			if (!blocked) {
 				return move(position, destination);
 			}
-		} else if (position >= 40 && destination >= 40) {
-			if (destination < 40 + 7) {
-				if (position < destination) {
-					for (int i = position + 1; i < destination; i++) {
-						if (board[i] != BLANK) {
-							return false;
-						}
+		} else if (position % 7 == destination % 7) {
+			boolean blocked = false;
+			int i = 0;
+			if (position != 0) {
+				if (position > destination) {
+					if (rowPosition == 7) {
+						return false;
 					}
-				} else {
-					for (int i = position - 1; i > destination; i--) {
-						if (board[i] != BLANK) {
-							return false;
+					i = position - 1;
+					while (!blocked && i > destination) {
+						if (i % 7 == position % 7) {
+							if (board[i] != BLANK) {
+								blocked = true;
+							}
 						}
+						i--;
+					}
+				} else if (position < destination) {
+					if (rowPosition == 0) {
+						return false;
+					}
+					i = position + 1;
+					while (!blocked && i < destination) {
+						if (i % 7 == destination % 7) {
+							if (board[i] != BLANK) {
+								blocked = true;
+							}
+						}
+						i++;
 					}
 				}
-				return move(position, destination);
 			}
-		} else if (position >= 32 && destination >= 32) {
-			if (destination < 32 + 7) {
-				if (position < destination) {
-					for (int i = position + 1; i < destination; i++) {
-						if (board[i] != BLANK) {
-							return false;
-						}
-					}
-				} else {
-					for (int i = position - 1; i > destination; i--) {
-						if (board[i] != BLANK) {
-							return false;
-						}
-					}
-				}
-				return move(position, destination);
-			}
-		} else if (position >= 24 && destination >= 24) {
-			if (destination < 24 + 7) {
-				if (position < destination) {
-					for (int i = position + 1; i < destination; i++) {
-						if (board[i] != BLANK) {
-							return false;
-						}
-					}
-				} else {
-					for (int i = position - 1; i > destination; i--) {
-						if (board[i] != BLANK) {
-							return false;
-						}
-					}
-				}
-				return move(position, destination);
-			}
-		} else if (position >= 16 && destination >= 16) {
-			if (destination < 16 + 7) {
-				if (position < destination) {
-					for (int i = position + 1; i < destination; i++) {
-						if (board[i] != BLANK) {
-							return false;
-						}
-					}
-				} else {
-					for (int i = position - 1; i > destination; i--) {
-						if (board[i] != BLANK) {
-							return false;
-						}
-					}
-				}
-				return move(position, destination);
-			}
-		} else if (position >= 8 && destination >= 8) {
-			if (destination < 8 + 7) {
-				if (position < destination) {
-					for (int i = position + 1; i < destination; i++) {
-						if (board[i] != BLANK) {
-							return false;
-						}
-					}
-				} else {
-					for (int i = position - 1; i > destination; i--) {
-						if (board[i] != BLANK) {
-							return false;
-						}
-					}
-				}
-				return move(position, destination);
-			}
-		} else {
-			if (destination < 7) {
-				if (position < destination) {
-					for (int i = position + 1; i < destination; i++) {
-						if (board[i] != BLANK) {
-							return false;
-						}
-					}
-				} else {
-					for (int i = position - 1; i > destination; i--) {
-						if (board[i] != BLANK) {
-							return false;
-						}
-					}
-				}
+			
+			if (!blocked) {
 				return move(position, destination);
 			}
 		}
@@ -957,9 +885,13 @@ public class ChessGame {
 		ChessGame testGame = new ChessGame();
 		testGame = testGame.setGame(game);
 
+		boolean checkNine = true;
+		boolean checkSeven = true;
+		boolean checkEight = true;
+
 		if (testGame.getPlayer() == WHITE_PLAYER) {
 			for (int i = 0; i < testGame.getBoard().length; i++) {
-				
+
 				int rowPosition = i % 8;
 
 				if (testGame.getBoard()[i] <= WHITE_QUEEN && testGame.getBoard()[i] > BLANK) {
@@ -1056,70 +988,274 @@ public class ChessGame {
 						break;
 
 					case WHITE_BISHOP:
-						
+						checkNine = true;
+						checkSeven = true;
+
 						for (int pos = i + 1; pos < testGame.getBoard().length; pos++) {
-							if (pos % 9 == i % 9) {
-								if (testGame.moveCheck(i,pos)) {
+							if (pos % 9 == i % 9 && checkNine) {
+								if (testGame.moveCheck(i, pos)) {
 									moveList.add(new Move(i, pos));
 									testGame = testGame.setGame(game);
-									System.out.println(i + " " + pos);
 								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
-									break;
+									checkNine = false;
 								} else if (testGame.getBoard()[pos] > WHITE_QUEEN) {
 									moveList.add(new Move(i, pos));
 									testGame = testGame.setGame(game);
-									System.out.println(i + " " + pos);
 									break;
 								}
-							} else if (pos % 7 == i % 7) {
-								if (testGame.moveCheck(i,pos)) {
+								if (pos % 8 == 7) {
+									checkNine = false;
+								}
+							} else if (pos % 7 == i % 7 && checkSeven) {
+								if (testGame.moveCheck(i, pos)) {
 									moveList.add(new Move(i, pos));
 									testGame = testGame.setGame(game);
-									System.out.println(i + " " + pos);
 								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
-									break;
+									checkSeven = false;
 								} else if (testGame.getBoard()[pos] > WHITE_QUEEN) {
 									moveList.add(new Move(i, pos));
 									testGame = testGame.setGame(game);
-									System.out.println(i + " " + pos);
 									break;
+								}
+								if (pos % 8 == 0) {
+									checkSeven = false;
 								}
 							}
 						}
 
+						checkNine = true;
+						checkSeven = true;
+
 						for (int pos = i - 1; pos >= 0; pos--) {
-							if (pos % 9 == i % 9) {
-								if (testGame.moveCheck(i,pos)) {
+							if (pos % 9 == i % 9 && checkNine) {
+								if (testGame.moveCheck(i, pos)) {
 									moveList.add(new Move(i, pos));
 									testGame = testGame.setGame(game);
-									System.out.println(i + " " + pos);
 								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
-									break;
+									checkNine = false;
 								} else if (testGame.getBoard()[pos] > WHITE_QUEEN) {
 									moveList.add(new Move(i, pos));
 									testGame = testGame.setGame(game);
-									System.out.println(i + " " + pos);
 									break;
 								}
-							} else if (pos % 7 == i % 7) {
-								if (testGame.moveCheck(i,pos)) {
+								if (pos % 8 == 0) {
+									checkNine = false;
+								}
+							} else if (pos % 7 == i % 7 && checkSeven) {
+								if (testGame.moveCheck(i, pos)) {
 									moveList.add(new Move(i, pos));
 									testGame = testGame.setGame(game);
-									System.out.println(i + " " + pos);
 								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
-									break;
+									checkSeven = false;
 								} else if (testGame.getBoard()[pos] > WHITE_QUEEN) {
 									moveList.add(new Move(i, pos));
 									testGame = testGame.setGame(game);
-									System.out.println(i + " " + pos);
 									break;
+								}
+								if (pos % 8 == 7) {
+									checkSeven = false;
 								}
 							}
 						}
 						break;
 					case WHITE_KNIGHT:
+						for (int moves = 0; moves < knightMoveSet.length; moves++) {
+							if (testGame.moveCheck(i, i + knightMoveSet[moves])) {
+								moveList.add(new Move(i, i + knightMoveSet[moves]));
+								testGame = testGame.setGame(game);
+							}
+							if (testGame.moveCheck(i, i - knightMoveSet[moves])) {
+								moveList.add(new Move(i, i - knightMoveSet[moves]));
+								testGame = testGame.setGame(game);
+							}
+						}
+						break;
 					case WHITE_QUEEN:
+						checkNine = true;
+						checkSeven = true;
+						checkEight = true;
+
+						for (int pos = i + 1; pos < testGame.getBoard().length; pos++) {
+
+							if (i % 8 == 0) {
+								checkSeven = false;
+							}
+
+							if (pos % 9 == i % 9 && checkNine) {
+								if (testGame.moveCheck(i, pos)) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									checkNine = false;
+								} else if (testGame.getBoard()[pos] > WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									checkNine = false;
+								}
+								if (pos % 8 == 7) {
+									checkNine = false;
+								}
+							} else if (pos % 8 == i % 8 && checkEight) {
+								if (testGame.moveCheck(i, pos)) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									checkEight = false;
+								} else if (testGame.getBoard()[pos] > WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									checkEight = false;
+								}
+							} else if (pos % 7 == i % 7 && checkSeven) {
+								if (testGame.moveCheck(i, pos)) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									checkSeven = false;
+								} else if (testGame.getBoard()[pos] > WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									checkSeven = false;
+								}
+								if (pos % 8 == 0) {
+									checkSeven = false;
+								}
+							}
+						}
+
+						checkNine = true;
+						checkSeven = true;
+						checkEight = true;
+
+						for (int pos = i - 1; pos >= 0; pos--) {
+							if (i % 8 == 7) {
+								checkSeven = false;
+							}
+
+							if (pos % 9 == i % 9 && checkNine) {
+								if (testGame.moveCheck(i, pos)) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									checkNine = false;
+								} else if (testGame.getBoard()[pos] > WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									checkNine = false;
+								}
+								if (pos % 8 == 7) {
+									checkNine = false;
+								}
+							} else if (pos % 8 == i % 8 && checkEight) {
+								if (testGame.moveCheck(i, pos)) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									checkEight = false;
+								} else if (testGame.getBoard()[pos] > WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									checkEight = false;
+								}
+							} else if (pos % 7 == i % 7 && checkSeven) {
+								if (testGame.moveCheck(i, pos)) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									checkSeven = false;
+								} else if (testGame.getBoard()[pos] > WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									checkSeven = false;
+								}
+								if (pos % 8 == 7) {
+									checkSeven = false;
+								}
+							}
+						}
+
+						if (rowPosition == 0) {
+							for (int pos = i + 1; pos < ((i - rowPosition) + 8); pos++) {
+								if (testGame.moveCheck(i, pos)) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									break;
+								} else if (testGame.getBoard()[pos] > WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									break;
+								}
+							}
+						} else if (rowPosition == 7) {
+							for (int pos = i - 1; pos >= (i - rowPosition); pos--) {
+								if (testGame.moveCheck(i, pos)) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									break;
+								} else if (testGame.getBoard()[pos] > WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									break;
+								}
+							}
+						} else {
+							for (int pos = i + 1; pos < ((i - rowPosition) + 8); pos++) {
+								if (testGame.moveCheck(i, pos)) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									break;
+								} else if (testGame.getBoard()[pos] > WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									break;
+								}
+							}
+							for (int pos = i - 1; pos >= (i - rowPosition); pos--) {
+								if (testGame.moveCheck(i, pos)) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									break;
+								} else if (testGame.getBoard()[pos] > WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									break;
+								}
+							}
+						}
+
+						break;
 					case WHITE_KING:
+
+						if (i == 4) {
+							if (board[0] == WHITE_ROOK) {
+								if (testGame.moveCheck(i, 0)) {
+									moveList.add(new Move(i, 0));
+									testGame = testGame.setGame(game);
+								}
+							}
+							if (board[7] == WHITE_ROOK) {
+								if (testGame.moveCheck(i, 7)) {
+									moveList.add(new Move(i, 7));
+									testGame = testGame.setGame(game);
+								}
+							}
+						}
+
+						for (int moves = 0; moves < kingMoveSet.length; moves++) {
+							if (testGame.moveCheck(i, i + kingMoveSet[moves])) {
+								moveList.add(new Move(i, i + kingMoveSet[moves]));
+								testGame = testGame.setGame(game);
+							}
+							if (testGame.moveCheck(i, i - kingMoveSet[moves])) {
+								moveList.add(new Move(i, i - kingMoveSet[moves]));
+								testGame = testGame.setGame(game);
+							}
+						}
+						break;
 					default:
 						break;
 					}

@@ -531,64 +531,6 @@ public class TestQueen {
 	}
 	
 	@Test
-	public void queenIllegalPlus7(){
-		int[] board = new int[] 
-				{0,0,0,0,0,0,0,0,
-				 0,0,0,0,0,0,0,0,
-				 0,0,0,0,0,0,0,0,
-				 8,0,0,0,0,0,0,0,
-				 0,0,0,0,0,0,0,0,
-				 0,0,0,0,0,0,0,0,
-				 0,0,0,0,0,0,0,0,
-				 0,0,0,0,0,0,0,0};
-		
-		int[] expectedBoard = new int[] 
-				{0,0,0,0,0,0,0,0,
-				 0,0,0,0,0,0,0,0,
-				 0,0,0,0,0,0,0,0,
-				 8,0,0,0,0,0,0,0,
-				 0,0,0,0,0,0,0,0,
-				 0,0,0,0,0,0,0,0,
-				 0,0,0,0,0,0,0,0,
-				 0,0,0,0,0,0,0,0,};
-		testGame.setupBoard();
-		testGame.setBoard(board);
-		testGame.setPlayer(ChessGame.WHITE_PLAYER);
-		assertFalse(testGame.moveCheck(24, 31));
-		
-		assertArrayEquals(expectedBoard, testGame.getBoard());
-	}
-	
-	@Test
-	public void queenIllegalMinus7(){
-		int[] board = new int[] 
-				{0,0,0,0,0,0,0,0,
-				 0,0,0,0,0,0,0,0,
-				 0,0,0,0,0,0,0,0,
-				 0,0,0,0,0,0,0,8,
-				 0,0,0,0,0,0,0,0,
-				 0,0,0,0,0,0,0,0,
-				 0,0,0,0,0,0,0,0,
-				 0,0,0,0,0,0,0,0};
-		
-		int[] expectedBoard = new int[] 
-				{0,0,0,0,0,0,0,0,
-				 0,0,0,0,0,0,0,0,
-				 0,0,0,0,0,0,0,0,
-				 0,0,0,0,0,0,0,8,
-				 0,0,0,0,0,0,0,0,
-				 0,0,0,0,0,0,0,0,
-				 0,0,0,0,0,0,0,0,
-				 0,0,0,0,0,0,0,0,};
-		testGame.setupBoard();
-		testGame.setBoard(board);
-		testGame.setPlayer(ChessGame.WHITE_PLAYER);
-		assertFalse(testGame.moveCheck(31, 24));
-		
-		assertArrayEquals(expectedBoard, testGame.getBoard());
-	}
-	
-	@Test
 	public void queenIllegalPlus1(){
 		int[] board = new int[] 
 				{0,0,0,0,0,0,0,0,
@@ -642,6 +584,35 @@ public class TestQueen {
 		testGame.setBoard(board);
 		testGame.setPlayer(ChessGame.WHITE_PLAYER);
 		assertFalse(testGame.moveCheck(31, 40));
+		
+		assertArrayEquals(expectedBoard, testGame.getBoard());
+	}
+	
+	@Test
+	public void queenLegal7to0(){
+		int[] board = new int[] 
+				{0,0,0,0,0,0,0,8,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0};
+		
+		int[] expectedBoard = new int[] 
+				{8,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,};
+		testGame.setupBoard();
+		testGame.setBoard(board);
+		testGame.setPlayer(ChessGame.WHITE_PLAYER);
+		assertTrue(testGame.moveCheck(7, 0));
 		
 		assertArrayEquals(expectedBoard, testGame.getBoard());
 	}

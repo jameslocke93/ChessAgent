@@ -437,11 +437,8 @@ public class TestRules {
 				 0,0,0,0,0,0,0,0,
 				 0,0,0,0,0,0,0,0,};
 		
-		ArrayList<Move> moveList = new ArrayList<Move>();
-		
 		testGame.setupBoard();
-		testGame.setBoard(board);
-		moveList = testGame.moveList(testGame);
+		testGame.setBoard(board);testGame.moveList(testGame);
 	}
 	
 	@Test
@@ -456,11 +453,9 @@ public class TestRules {
 				 0,0,0,0,6,0,0,0,
 				 0,0,0,0,0,0,0,0,};
 		
-		ArrayList<Move> moveList = new ArrayList<Move>();
-		
 		testGame.setupBoard();
 		testGame.setBoard(board);
-		moveList = testGame.moveList(testGame);
+		testGame.moveList(testGame);
 	}
 	
 	@Test
@@ -470,18 +465,61 @@ public class TestRules {
 				 0,0,0,0,0,0,0,0,
 				 0,0,0,0,0,0,0,0,
 				 0,0,0,0,0,0,0,0,
-				 0,0,0,0,5,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 5,0,0,0,0,0,0,0,};
+		
+		testGame.setupBoard();
+		testGame.setBoard(board);testGame.moveList(testGame);
+	}
+	
+	@Test
+	public void knightMoveList(){
+		int[] board = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,6,0,0,0,0,0,0,
 				 0,0,0,0,0,0,0,0,
 				 0,0,0,0,0,0,0,0,
 				 0,0,0,0,0,0,0,0,};
 		
-		ArrayList<Move> moveList = new ArrayList<Move>();
+		testGame.setupBoard();
+		testGame.setBoard(board);testGame.moveList(testGame);
+	}
+	
+	@Test
+	public void kingMoveList(){
+		int[] board = new int[] 
+				{4,0,0,7,0,0,0,4,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,};
 		
 		testGame.setupBoard();
-		testGame.setBoard(board);
-		moveList = testGame.moveList(testGame);
+		testGame.setBoard(board);testGame.moveList(testGame);
+	}
+	
+	@Test
+	public void queenMoveList(){
+		int[] board = new int[] 
+				{0,0,8,0,4,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,};
 		
-		System.out.println(moveList.size());
+		testGame.setupBoard();
+		testGame.setBoard(board);testGame.moveList(testGame);
 	}
 	
 	/*@Test
