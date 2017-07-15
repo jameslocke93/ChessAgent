@@ -2,8 +2,6 @@ package chessAgentV1;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
-
 import org.junit.Test;
 
 public class TestRules {
@@ -530,11 +528,9 @@ public class TestRules {
 	@Test
 	public void startingMoveList(){
 		
-		ArrayList<Move> moves = new ArrayList<Move>();
-		
 		testGame.setupBoard();
 		testGame.setPlayer(ChessGame.BLACK_PLAYER);
-		moves = testGame.moveList(testGame);
+		testGame.moveList(testGame);
 
 		/*for(int i = 0; i < moves.size(); i++){
 			System.out.println(moves.get(i).getPosition() + " " + moves.get(i).getDestination());
