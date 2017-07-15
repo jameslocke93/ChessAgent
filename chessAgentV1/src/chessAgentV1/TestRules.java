@@ -438,7 +438,8 @@ public class TestRules {
 				 0,0,0,0,0,0,0,0,};
 		
 		testGame.setupBoard();
-		testGame.setBoard(board);testGame.moveList(testGame);
+		testGame.setBoard(board);
+		testGame.moveList(testGame);
 	}
 	
 	@Test
@@ -471,7 +472,8 @@ public class TestRules {
 				 5,0,0,0,0,0,0,0,};
 		
 		testGame.setupBoard();
-		testGame.setBoard(board);testGame.moveList(testGame);
+		testGame.setBoard(board);
+		testGame.moveList(testGame);
 	}
 	
 	@Test
@@ -487,7 +489,8 @@ public class TestRules {
 				 0,0,0,0,0,0,0,0,};
 		
 		testGame.setupBoard();
-		testGame.setBoard(board);testGame.moveList(testGame);
+		testGame.setBoard(board);
+		testGame.moveList(testGame);
 	}
 	
 	@Test
@@ -503,7 +506,8 @@ public class TestRules {
 				 0,0,0,0,0,0,0,0,};
 		
 		testGame.setupBoard();
-		testGame.setBoard(board);testGame.moveList(testGame);
+		testGame.setBoard(board);
+		testGame.moveList(testGame);
 	}
 	
 	@Test
@@ -519,7 +523,8 @@ public class TestRules {
 				 0,0,0,0,0,0,0,0,};
 		
 		testGame.setupBoard();
-		testGame.setBoard(board);testGame.moveList(testGame);
+		testGame.setBoard(board);
+		testGame.moveList(testGame);
 	}
 	
 	@Test
@@ -531,9 +536,42 @@ public class TestRules {
 		testGame.setPlayer(ChessGame.BLACK_PLAYER);
 		moves = testGame.moveList(testGame);
 
-		for(int i = 0; i < moves.size(); i++){
-			System.out.println(moves.get(i).position + " " + moves.get(i).destination);
-		}
+		/*for(int i = 0; i < moves.size(); i++){
+			System.out.println(moves.get(i).getPosition() + " " + moves.get(i).getDestination());
+		}*/
+	}
+	
+	@Test
+	public void check(){
+		int[] board = new int[] 
+				{0,0,8,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,13,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,};
 		
+		testGame.setupBoard();
+		testGame.setBoard(board);
+		testGame.check(testGame);
+	}
+	
+	@Test
+	public void checkMate(){
+		int[] board = new int[] 
+				{0,0,8,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,13,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,8,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,};
+		
+		testGame.setupBoard();
+		testGame.setBoard(board);
+		testGame.checkMate(testGame);
 	}
 }

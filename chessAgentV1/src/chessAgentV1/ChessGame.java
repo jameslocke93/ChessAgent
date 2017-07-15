@@ -874,8 +874,72 @@ public class ChessGame {
 		board[position] = pieceReplacement;
 	}
 
-	public void check() {
+	public boolean check(ChessGame game) {
 
+		ArrayList<Move> moves = new ArrayList<Move>();
+
+		moves = game.moveList(game);
+
+		if (currentPlayer == WHITE_PLAYER) {
+			for (int i = 0; i < moves.size(); i++) {
+				if (game.getBoard()[moves.get(i).getDestination()] == BLACK_KING) {
+					return true;
+				}
+			}
+		} else {
+			for (int i = 0; i < moves.size(); i++) {
+				if (game.getBoard()[moves.get(i).getDestination()] == WHITE_KING) {
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	public boolean checkMate(ChessGame game) {
+
+		ChessGame testGame = new ChessGame();
+		testGame = setGame(game);
+
+		ArrayList<Move> currentMoves = new ArrayList<Move>();
+		ArrayList<Move> opponentMoves = new ArrayList<Move>();
+		int opposingPlayer = 0;
+		boolean exists = false;
+
+		if (testGame.getPlayer() == WHITE_PLAYER) {
+			testGame.setPlayer(BLACK_PLAYER);
+		} else if (testGame.getPlayer() == BLACK_PLAYER) {
+			testGame.setPlayer(WHITE_PLAYER);
+		}
+
+		opponentMoves = moveList(testGame);
+		opposingPlayer = testGame.getPlayer();
+
+		for (int i = 0; i < opponentMoves.size(); i++) {
+			exists = false;
+			if (testGame.moveCheck(opponentMoves.get(i).getPosition(), opponentMoves.get(i).getDestination())) {
+				if (testGame.getPlayer() == WHITE_PLAYER) {
+					testGame.setPlayer(BLACK_PLAYER);
+				} else if (testGame.getPlayer() == BLACK_PLAYER) {
+					testGame.setPlayer(WHITE_PLAYER);
+				}
+				currentMoves = moveList(testGame);
+				for (int j = 0; j < currentMoves.size(); j++) {
+					if (opponentMoves.get(i).getDestination() == currentMoves.get(j).getDestination()) {
+						exists = true;
+						break;
+					}
+				}
+				if (exists == false) {
+					return false;
+				}
+			}
+			testGame = setGame(game);
+			testGame.setPlayer(opposingPlayer);
+		}
+
+		return true;
 	}
 
 	public ArrayList<Move> moveList(ChessGame game) {
