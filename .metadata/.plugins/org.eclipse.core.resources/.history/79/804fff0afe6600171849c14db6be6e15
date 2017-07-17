@@ -1,0 +1,1127 @@
+package chessAgentV1;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public class ChessGame {
+
+	public static final int BLANK = 0;
+	public static final int WHITE_PLAYER = 1;
+	public static final int BLACK_PLAYER = 2;
+
+	public static final int WHITE_PAWN = 3;
+	public static final int WHITE_ROOK = 4;
+	public static final int WHITE_BISHOP = 5;
+	public static final int WHITE_KNIGHT = 6;
+	public static final int WHITE_KING = 7;
+	public static final int WHITE_QUEEN = 8;
+
+	public static final int BLACK_PAWN = 9;
+	public static final int BLACK_ROOK = 10;
+	public static final int BLACK_BISHOP = 11;
+	public static final int BLACK_KNIGHT = 12;
+	public static final int BLACK_KING = 13;
+	public static final int BLACK_QUEEN = 14;
+
+	private int[] board;
+	private boolean[] pawnFirstMoves;
+	private int[] pawnTurncounter;
+	private boolean[] rookFirstMoves;
+	private boolean[] kingFirstMoves;
+	private int currentPlayer;
+	private int turncounter;
+
+	private int[] pawnMoveSet;
+	private int[] rookMoveSet;
+
+	public ChessGame() {
+		board = new int[64];
+		pawnFirstMoves = new boolean[16];
+		rookFirstMoves = new boolean[4];
+		kingFirstMoves = new boolean[2];
+		pawnTurncounter = new int[16];
+
+		pawnMoveSet = new int[] { 8, 16, 7, 9 };
+		rookMoveSet = new int[] { 1, 8 };
+
+		setupBoard();
+	}
+
+	public void setupBoard() {
+
+		currentPlayer = WHITE_PLAYER;
+
+		// Used for the pawns, rooks and kings to see if it is the first move
+		for (int i = 0; i < pawnFirstMoves.length; i++) {
+			pawnFirstMoves[i] = true;
+		}
+
+		for (int i = 0; i < rookFirstMoves.length; i++) {
+			rookFirstMoves[i] = true;
+		}
+
+		for (int i = 0; i < kingFirstMoves.length; i++) {
+			kingFirstMoves[i] = true;
+		}
+
+		// Setup pieces on the board
+		for (int i = 0; i < board.length; i++) {
+			switch (i) {
+			case 0:
+			case 7:
+				board[i] = WHITE_ROOK;
+				break;
+			case 1:
+			case 6:
+				board[i] = WHITE_KNIGHT;
+				break;
+			case 2:
+			case 5:
+				board[i] = WHITE_BISHOP;
+				break;
+			case 3:
+				board[i] = WHITE_QUEEN;
+				break;
+			case 4:
+				board[i] = WHITE_KING;
+				break;
+			case 8:
+			case 9:
+			case 10:
+			case 11:
+			case 12:
+			case 13:
+			case 14:
+			case 15:
+				board[i] = WHITE_PAWN;
+				break;
+			case 48:
+			case 49:
+			case 50:
+			case 51:
+			case 52:
+			case 53:
+			case 54:
+			case 55:
+				board[i] = BLACK_PAWN;
+				break;
+			case 56:
+			case 63:
+				board[i] = BLACK_ROOK;
+				break;
+			case 57:
+			case 62:
+				board[i] = BLACK_KNIGHT;
+				break;
+			case 58:
+			case 61:
+				board[i] = BLACK_BISHOP;
+				break;
+			case 59:
+				board[i] = BLACK_QUEEN;
+				break;
+			case 60:
+				board[i] = BLACK_KING;
+				break;
+			default:
+				board[i] = BLANK;
+				break;
+			}
+		}
+	}
+
+	// The publicly accessible move function
+	public boolean moveCheck(int position, int destination) {
+
+		// Check if position and destination are within bounds and not empty
+		if (position < 0 | position >= board.length) {
+			return false;
+		}
+		if (destination < 0 | destination >= board.length) {
+			return false;
+		}
+		if (position == destination) {
+			return false;
+		}
+
+		// Check for castling request
+		if (currentPlayer == WHITE_PLAYER && board[position] == WHITE_KING && board[destination] == WHITE_ROOK) {
+			return castle(position, destination);
+		} else if (currentPlayer == BLACK_PLAYER && board[position] == BLACK_KING && board[destination] == BLACK_ROOK) {
+			return castle(position, destination);
+		}
+
+		if (currentPlayer == WHITE_PLAYER && board[destination] < BLACK_PAWN && board[destination] != BLANK) {
+			return false;
+		} else if (currentPlayer == BLACK_PLAYER && board[destination] > WHITE_QUEEN) {
+			return false;
+		}
+
+		if (board[position] <= WHITE_KING && currentPlayer != WHITE_PLAYER) {
+			return false;
+		} else if (board[position] >= BLACK_PAWN && currentPlayer != BLACK_PLAYER) {
+			return false;
+		}
+
+		// Checks to see what piece is in the position
+		switch (board[position]) {
+		case WHITE_PAWN:
+		case BLACK_PAWN:
+			return movePawn(position, destination);
+		case WHITE_ROOK:
+		case BLACK_ROOK:
+			return moveRook(position, destination);
+		case WHITE_BISHOP:
+		case BLACK_BISHOP:
+			return moveBishop(position, destination);
+		case WHITE_KNIGHT:
+		case BLACK_KNIGHT:
+			return moveKnight(position, destination);
+		case WHITE_KING:
+		case BLACK_KING:
+			return moveKing(position, destination);
+		case WHITE_QUEEN:
+		case BLACK_QUEEN:
+			return moveQueen(position, destination);
+		default:
+			break;
+		}
+
+		return false;
+	}
+
+	// Conduct the move
+	private boolean move(int position, int destination) {
+
+		if (board[position] == WHITE_ROOK || board[position] == BLACK_ROOK) {
+			if (position == 0 && rookFirstMoves[0]) {
+				rookFirstMoves[0] = false;
+			} else if (position == 7 && rookFirstMoves[1]) {
+				rookFirstMoves[1] = false;
+			} else if (position == 56 && rookFirstMoves[2]) {
+				rookFirstMoves[2] = false;
+			} else if (position == 63 && rookFirstMoves[3]) {
+				rookFirstMoves[3] = false;
+			}
+		} else if (board[position] == WHITE_KING || board[position] == BLACK_KING) {
+			if (position == 4 && kingFirstMoves[0]) {
+				kingFirstMoves[0] = false;
+			} else if (position == 60 && kingFirstMoves[1]) {
+				kingFirstMoves[1] = false;
+			}
+		}
+
+		board[destination] = board[position];
+		board[position] = BLANK;
+
+		turncounter++;
+		return true;
+	}
+
+	// Each individual piece move function that is only accessed by public move
+	private boolean movePawn(int position, int destination) {
+
+		int rowPosition = position % 8;
+		int firstMoveArrayPosition = 0;
+
+		if (currentPlayer == WHITE_PLAYER && board[destination] >= BLACK_PAWN) {
+			// Legal take
+			firstMoveArrayPosition = position % 8;
+			if (rowPosition == 0) {
+				if (destination == position + 9) {
+					if (pawnFirstMoves[firstMoveArrayPosition]) {
+						pawnFirstMoves[firstMoveArrayPosition] = false;
+						pawnTurncounter[firstMoveArrayPosition] = getTurncounter();
+					}
+					return move(position, destination);
+				}
+			} else if (rowPosition == 7) {
+				if (destination == position + 7) {
+					if (pawnFirstMoves[firstMoveArrayPosition]) {
+						pawnFirstMoves[firstMoveArrayPosition] = false;
+						pawnTurncounter[firstMoveArrayPosition] = getTurncounter();
+					}
+					return move(position, destination);
+				}
+			} else {
+				if (destination == position + 7) {
+					if (pawnFirstMoves[firstMoveArrayPosition]) {
+						pawnFirstMoves[firstMoveArrayPosition] = false;
+						pawnTurncounter[firstMoveArrayPosition] = getTurncounter();
+					}
+					return move(position, destination);
+				} else if (destination == position + 9) {
+					if (pawnFirstMoves[firstMoveArrayPosition]) {
+						pawnFirstMoves[firstMoveArrayPosition] = false;
+						pawnTurncounter[firstMoveArrayPosition] = getTurncounter();
+					}
+					return move(position, destination);
+				}
+			}
+		} else if (currentPlayer == BLACK_PLAYER && board[destination] <= WHITE_QUEEN && board[destination] > BLANK) {
+			firstMoveArrayPosition = (position % 8) + 8;
+			// Legal take
+			if (rowPosition == 0) {
+				if (destination == position - 7) {
+					if (pawnFirstMoves[firstMoveArrayPosition]) {
+						pawnFirstMoves[firstMoveArrayPosition] = false;
+						pawnTurncounter[firstMoveArrayPosition] = getTurncounter();
+					}
+					return move(position, destination);
+				}
+			} else if (rowPosition == 7) {
+				if (destination == position - 9) {
+					if (pawnFirstMoves[firstMoveArrayPosition]) {
+						pawnFirstMoves[firstMoveArrayPosition] = false;
+						pawnTurncounter[firstMoveArrayPosition] = getTurncounter();
+					}
+					return move(position, destination);
+				}
+			} else {
+				if (destination == position - 7) {
+					if (pawnFirstMoves[firstMoveArrayPosition]) {
+						pawnFirstMoves[firstMoveArrayPosition] = false;
+						pawnTurncounter[firstMoveArrayPosition] = getTurncounter();
+					}
+					return move(position, destination);
+				} else if (destination == position - 9) {
+					if (pawnFirstMoves[firstMoveArrayPosition]) {
+						pawnFirstMoves[firstMoveArrayPosition] = false;
+						pawnTurncounter[firstMoveArrayPosition] = getTurncounter();
+					}
+					return move(position, destination);
+				}
+			}
+		}
+		if (position >= 32 && position <= 39 && board[destination] == BLANK) {
+			if (destination == position + 7) {
+				return enPassant(position, destination, rowPosition);
+			} else if (destination == position + 9) {
+				return enPassant(position, destination, rowPosition);
+			}
+		} else if (position >= 24 && position <= 31 && board[destination] == BLANK) {
+			if (destination == position - 7) {
+				return enPassant(position, destination, rowPosition);
+			} else if (destination == position - 9) {
+				return enPassant(position, destination, rowPosition);
+			}
+		}
+
+		// Check to see if this is a double or single move
+		if (position >= 8 && position <= 15) {
+			firstMoveArrayPosition = position % 8;
+			if (pawnFirstMoves[firstMoveArrayPosition]) {
+				// Then white pawn double move is allowed
+				if (board[destination] == BLANK) {
+					if (destination == position + 8 || destination == position + 16) {
+						// Change it so that its first move is now false
+						pawnFirstMoves[firstMoveArrayPosition] = false;
+						pawnTurncounter[firstMoveArrayPosition] = getTurncounter();
+						return move(position, destination);
+					}
+				}
+			}
+		} else if (position >= 48 && position <= 55) {
+			firstMoveArrayPosition = (position % 8) + 8;
+			if (pawnFirstMoves[firstMoveArrayPosition]) {
+				// Then black pawn double move is allowed
+				if (board[destination] == BLANK) {
+					if (destination == position - 8 || destination == position - 16) {
+						pawnFirstMoves[firstMoveArrayPosition] = false;
+						pawnTurncounter[firstMoveArrayPosition] = getTurncounter();
+						return move(position, destination);
+					}
+				}
+			}
+		}
+
+		if (board[position] == WHITE_PAWN) {
+			// Then white pawn single move is allowed
+			if (board[destination] == BLANK) {
+				if (destination == position + 8) {
+					return move(position, destination);
+				}
+			}
+		} else {
+			// Black pawn single move is allowed
+			if (board[destination] == BLANK) {
+				if (destination == position - 8) {
+					return move(position, destination);
+				}
+			}
+		}
+		return false;
+	}
+
+	private boolean moveRook(int position, int destination) {
+
+		boolean blocked = false;
+
+		// Check if the movement is forward/backwards
+		if (position % 8 == destination % 8) {
+			if (position < destination) {
+				for (int i = position + 1; i < destination; i++) {
+					if (i % 8 == position % 8) {
+						if (board[i] != BLANK) {
+							blocked = true;
+						}
+					}
+				}
+			} else {
+				for (int i = position - 1; i > destination; i--) {
+					if (i % 8 == position % 8) {
+						if (board[i] != BLANK) {
+							blocked = true;
+						}
+					}
+				}
+			}
+		} else if (position >= 56) {
+			if (destination < 56 + 8) {
+				for (int i = position + 1; i < destination; i++) {
+					if (board[i] != BLANK) {
+						blocked = true;
+					}
+				}
+			} else {
+				return false;
+			}
+		} else if (position >= 48) {
+			if (destination < 48 + 8) {
+				for (int i = position + 1; i < destination; i++) {
+					if (board[i] != BLANK) {
+						blocked = true;
+					}
+				}
+			} else {
+				return false;
+			}
+		} else if (position >= 40) {
+			if (destination < 40 + 8) {
+				for (int i = position + 1; i < destination; i++) {
+					if (board[i] != BLANK) {
+						blocked = true;
+					}
+				}
+			} else {
+				return false;
+			}
+		} else if (position >= 32) {
+			if (destination < 32 + 8) {
+				for (int i = position + 1; i < destination; i++) {
+					if (board[i] != BLANK) {
+						blocked = true;
+					}
+				}
+			} else {
+				return false;
+			}
+		} else if (position >= 24) {
+			if (destination < 24 + 8) {
+				for (int i = position + 1; i < destination; i++) {
+					if (board[i] != BLANK) {
+						blocked = true;
+					}
+				}
+			} else {
+				return false;
+			}
+		} else if (position >= 16) {
+			if (destination < 16 + 8) {
+				for (int i = position + 1; i < destination; i++) {
+					if (board[i] != BLANK) {
+						blocked = true;
+					}
+				}
+			} else {
+				return false;
+			}
+		} else if (position >= 8) {
+			if (destination < 8 + 8) {
+				for (int i = position + 1; i < destination; i++) {
+					if (board[i] != BLANK) {
+						blocked = true;
+					}
+				}
+			} else {
+				return false;
+			}
+		} else {
+			if (destination < 0 + 8) {
+				for (int i = position + 1; i < destination; i++) {
+					if (board[i] != BLANK) {
+						blocked = true;
+					}
+				}
+			} else {
+				return false;
+			}
+		}
+
+		if (!blocked) {
+			return move(position, destination);
+		}
+
+		return false;
+	}
+
+	private boolean moveKnight(int position, int destination) {
+
+		int rowPosition = position % 8;
+
+		if (rowPosition >= 6) {
+			if (rowPosition == 7) {
+				if (destination == position - 15) {
+					return false;
+				} else if (destination == position + 17) {
+					return false;
+				}
+			}
+			if (destination == position - 6) {
+				return false;
+			} else if (destination == position + 10) {
+				return false;
+			}
+		} else if (rowPosition <= 1) {
+			if (rowPosition <= 0) {
+				if (destination == position - 17) {
+					return false;
+				} else if (destination == position + 15) {
+					return false;
+				}
+			}
+			if (destination == position - 10) {
+				return false;
+			} else if (destination == position + 6) {
+				return false;
+			}
+		}
+
+		if (destination == position - 17) {
+			return move(position, destination);
+		} else if (destination == position - 15) {
+			return move(position, destination);
+		} else if (destination == position + 15) {
+			return move(position, destination);
+		} else if (destination == position + 17) {
+			return move(position, destination);
+		} else if (destination == position - 10) {
+			return move(position, destination);
+		} else if (destination == position - 6) {
+			return move(position, destination);
+		} else if (destination == position + 6) {
+			return move(position, destination);
+		} else if (destination == position + 10) {
+			return move(position, destination);
+		}
+
+		return false;
+	}
+
+	private boolean moveBishop(int position, int destination) {
+
+		int rowPosition = position % 8;
+		int distance = position - destination;
+
+		if (rowPosition == 0) {
+			if (distance % 9 == 0) {
+				if (position > destination) {
+					return false;
+				}
+			} else if (distance % 7 == 0) {
+				if (position < destination) {
+					return false;
+				}
+			}
+		} else if (rowPosition == 7) {
+			if (distance % 9 == 0) {
+				if (position < destination) {
+					return false;
+				}
+			} else if (distance % 7 == 0) {
+				if (position > destination) {
+					return false;
+				}
+			}
+		}
+
+		if (distance % 9 == 0) {
+			if (position < destination) {
+				for (int i = position + 1; i < destination; i++) {
+					if (i % 9 == position % 9) {
+						if (board[i] != BLANK) {
+							return false;
+						}
+					}
+				}
+				return move(position, destination);
+			} else {
+				for (int i = position - 1; i > destination; i--) {
+					if (i % 9 == position % 9) {
+						if (board[i] != BLANK) {
+							return false;
+						}
+					}
+				}
+				return move(position, destination);
+			}
+		} else if (distance % 7 == 0) {
+			if (position < destination) {
+				for (int i = position + 1; i < destination; i++) {
+					if (i % 7 == position % 7) {
+						if (board[i] != BLANK) {
+							return false;
+						}
+					}
+				}
+				return move(position, destination);
+			} else {
+				for (int i = position - 1; i > destination; i--) {
+					if (i % 7 == position % 7) {
+						if (board[i] != BLANK) {
+							return false;
+						}
+					}
+				}
+				return move(position, destination);
+			}
+		}
+
+		return false;
+	}
+
+	private boolean moveKing(int position, int destination) {
+
+		int rowPosition = position % 8;
+
+		if (rowPosition == 0) {
+			if (destination == position + 7) {
+				return false;
+			} else if (destination == position - 1) {
+				return false;
+			} else if (destination == position - 9) {
+				return false;
+			}
+		} else if (rowPosition == 7) {
+			if (destination == position - 7) {
+				return false;
+			} else if (destination == position + 1) {
+				return false;
+			} else if (destination == position + 9) {
+				return false;
+			}
+		}
+
+		if (destination == position + 7) {
+			return move(position, destination);
+		} else if (destination == position - 1) {
+			return move(position, destination);
+		} else if (destination == position - 9) {
+			return move(position, destination);
+		} else if (destination == position - 7) {
+			return move(position, destination);
+		} else if (destination == position + 1) {
+			return move(position, destination);
+		} else if (destination == position + 9) {
+			return move(position, destination);
+		} else if (destination == position + 8) {
+			return move(position, destination);
+		} else if (destination == position - 8) {
+			return move(position, destination);
+		}
+
+		return false;
+	}
+
+	private boolean moveQueen(int position, int destination) {
+
+		int rowPosition = position % 8;
+		int distance = position - destination;
+
+		if (rowPosition == 0) {
+			if (distance % 9 == 0) {
+				if (position > destination) {
+					return false;
+				}
+			} else if (distance % 7 == 0) {
+				if (position < destination) {
+					return false;
+				}
+			}
+		} else if (rowPosition == 7) {
+			if (distance % 9 == 0) {
+				if (position < destination) {
+					return false;
+				}
+			} else if (distance % 7 == 0) {
+				if (position > destination) {
+					return false;
+				}
+			}
+		}
+
+		if (distance % 7 == 0) {
+			if (position < destination) {
+				for (int i = position + 1; i < destination; i++) {
+					if (board[i] != BLANK) {
+						return false;
+					}
+				}
+				return move(position, destination);
+			} else {
+				for (int i = position - 1; i > destination; i--) {
+					if (board[i] != BLANK) {
+						return false;
+					}
+				}
+			}
+		} else if (distance % 9 == 0) {
+			if (position < destination) {
+				for (int i = position + 1; i < destination; i++) {
+					if (board[i] != BLANK) {
+						return false;
+					}
+				}
+				return move(position, destination);
+			} else {
+				for (int i = position - 1; i > destination; i--) {
+					if (board[i] != BLANK) {
+						return false;
+					}
+				}
+				return move(position, destination);
+			}
+		} else if (distance % 8 == 0) {
+			if (position < destination) {
+				for (int i = position + 1; i < destination; i++) {
+					if (board[i] != BLANK) {
+						return false;
+					}
+				}
+				return move(position, destination);
+			} else {
+				for (int i = position - 1; i > destination; i--) {
+					if (board[i] != BLANK) {
+						return false;
+					}
+				}
+				return move(position, destination);
+			}
+		}
+
+		if (position >= 56 && destination >= 56) {
+			if (destination < 56 + 7) {
+				if (position < destination) {
+					for (int i = position + 1; i < destination; i++) {
+						if (board[i] != BLANK) {
+							return false;
+						}
+					}
+				} else {
+					for (int i = position - 1; i > destination; i--) {
+						if (board[i] != BLANK) {
+							return false;
+						}
+					}
+				}
+				return move(position, destination);
+			}
+		} else if (position >= 48 && destination >= 48) {
+			if (destination < 48 + 7) {
+				if (position < destination) {
+					for (int i = position + 1; i < destination; i++) {
+						if (board[i] != BLANK) {
+							return false;
+						}
+					}
+				} else {
+					for (int i = position - 1; i > destination; i--) {
+						if (board[i] != BLANK) {
+							return false;
+						}
+					}
+				}
+				return move(position, destination);
+			}
+		} else if (position >= 40 && destination >= 40) {
+			if (destination < 40 + 7) {
+				if (position < destination) {
+					for (int i = position + 1; i < destination; i++) {
+						if (board[i] != BLANK) {
+							return false;
+						}
+					}
+				} else {
+					for (int i = position - 1; i > destination; i--) {
+						if (board[i] != BLANK) {
+							return false;
+						}
+					}
+				}
+				return move(position, destination);
+			}
+		} else if (position >= 32 && destination >= 32) {
+			if (destination < 32 + 7) {
+				if (position < destination) {
+					for (int i = position + 1; i < destination; i++) {
+						if (board[i] != BLANK) {
+							return false;
+						}
+					}
+				} else {
+					for (int i = position - 1; i > destination; i--) {
+						if (board[i] != BLANK) {
+							return false;
+						}
+					}
+				}
+				return move(position, destination);
+			}
+		} else if (position >= 24 && destination >= 24) {
+			if (destination < 24 + 7) {
+				if (position < destination) {
+					for (int i = position + 1; i < destination; i++) {
+						if (board[i] != BLANK) {
+							return false;
+						}
+					}
+				} else {
+					for (int i = position - 1; i > destination; i--) {
+						if (board[i] != BLANK) {
+							return false;
+						}
+					}
+				}
+				return move(position, destination);
+			}
+		} else if (position >= 16 && destination >= 16) {
+			if (destination < 16 + 7) {
+				if (position < destination) {
+					for (int i = position + 1; i < destination; i++) {
+						if (board[i] != BLANK) {
+							return false;
+						}
+					}
+				} else {
+					for (int i = position - 1; i > destination; i--) {
+						if (board[i] != BLANK) {
+							return false;
+						}
+					}
+				}
+				return move(position, destination);
+			}
+		} else if (position >= 8 && destination >= 8) {
+			if (destination < 8 + 7) {
+				if (position < destination) {
+					for (int i = position + 1; i < destination; i++) {
+						if (board[i] != BLANK) {
+							return false;
+						}
+					}
+				} else {
+					for (int i = position - 1; i > destination; i--) {
+						if (board[i] != BLANK) {
+							return false;
+						}
+					}
+				}
+				return move(position, destination);
+			}
+		} else {
+			if (destination < 7) {
+				if (position < destination) {
+					for (int i = position + 1; i < destination; i++) {
+						if (board[i] != BLANK) {
+							return false;
+						}
+					}
+				} else {
+					for (int i = position - 1; i > destination; i--) {
+						if (board[i] != BLANK) {
+							return false;
+						}
+					}
+				}
+				return move(position, destination);
+			}
+		}
+		return false;
+	}
+
+	// Checks to see if the castle movement is able to happen
+	public boolean castle(int position, int destination) {
+
+		if (currentPlayer == WHITE_PLAYER && position != 4 && (destination != 0 || destination != 7)) {
+			return false;
+		} else if (currentPlayer == BLACK_PLAYER && position != 60 && (destination != 56 || destination != 63)) {
+			return false;
+		}
+
+		if (position == 4 && kingFirstMoves[0]) {
+			if (destination == 0 && rookFirstMoves[0]) {
+				for (int i = position - 1; i > destination; i--) {
+					if (board[i] != BLANK) {
+						return false;
+					}
+				}
+				move(position, position - 2);
+				return move(destination, destination + 3);
+			} else if (destination == 7 && rookFirstMoves[1]) {
+				for (int i = position + 1; i < destination; i++) {
+					if (board[i] != BLANK) {
+						return false;
+					}
+				}
+				move(position, position + 2);
+				return move(destination, destination - 2);
+			}
+		} else if (position == 60 && kingFirstMoves[1]) {
+			if (destination == 56 && rookFirstMoves[2]) {
+				for (int i = position - 1; i > destination; i--) {
+					if (board[i] != BLANK) {
+						return false;
+					}
+				}
+				move(position, position - 2);
+				return move(destination, destination + 3);
+			} else if (destination == 63 && rookFirstMoves[3]) {
+				for (int i = position + 1; i < destination; i++) {
+					if (board[i] != BLANK) {
+						return false;
+					}
+				}
+				move(position, position + 2);
+				return move(destination, destination - 2);
+			}
+		}
+
+		return false;
+	}
+
+	public boolean enPassant(int position, int destination, int rowPosition) {
+
+		int firstMoveArrayPosition = 0;
+
+		if (position >= 32 && position <= 39) {
+			firstMoveArrayPosition = (destination % 8) + 8;
+			if (rowPosition == 0) {
+				if (destination == position + 7) {
+					return false;
+				}
+			} else if (rowPosition == 7) {
+				if (destination == position + 9) {
+					return false;
+				}
+			}
+
+			if (board[destination - 8] == BLACK_PAWN) {
+				if (pawnTurncounter[firstMoveArrayPosition] == getTurncounter() - 1) {
+					board[destination - 8] = BLANK;
+					return move(position, destination);
+				}
+			}
+		} else if (position >= 24 && position <= 31) {
+			firstMoveArrayPosition = destination % 8;
+			if (rowPosition == 0) {
+				if (destination == position - 9) {
+					return false;
+				}
+			} else if (rowPosition == 7) {
+				if (destination == position - 7) {
+					return false;
+				}
+			}
+
+			if (board[destination + 8] == WHITE_PAWN) {
+				if (pawnTurncounter[firstMoveArrayPosition] == getTurncounter() - 1) {
+					board[destination + 8] = BLANK;
+					return move(position, destination);
+				}
+			}
+		}
+
+		return false;
+	}
+
+	public void pawnPromote(int position, int pieceReplacement) {
+		board[position] = pieceReplacement;
+	}
+
+	public void check() {
+
+	}
+
+	public ArrayList<Move> moveList(ChessGame game) {
+
+		ArrayList<Move> moveList = new ArrayList<Move>();
+
+		ChessGame testGame = new ChessGame();
+		testGame = testGame.setGame(game);
+
+		if (testGame.getPlayer() == WHITE_PLAYER) {
+			for (int i = 0; i < testGame.getBoard().length; i++) {
+
+				if (testGame.getBoard()[i] <= WHITE_QUEEN && testGame.getBoard()[i] > BLANK) {
+					switch (testGame.getBoard()[i]) {
+					case WHITE_PAWN:
+						for (int moves = 0; moves < pawnMoveSet.length; moves++) {
+							if (testGame.moveCheck(i, i + pawnMoveSet[moves])) {
+								// System.out.println(i + " " + (i +
+								// pawnMoveSet[moves]));
+								moveList.add(new Move(i, i + pawnMoveSet[moves]));
+								testGame = testGame.setGame(game);
+							}
+						}
+						break;
+					case WHITE_ROOK:
+						for (int pos = i + 1; pos < board.length; pos++) {
+							if (pos % 8 == i % 8) {
+								if (testGame.getBoard()[pos] == BLANK) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									System.out.println(i + " " + pos);
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									break;
+								} else if (testGame.getBoard()[pos] > WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									break;
+								}
+							}
+						}
+						for (int pos = i - 1; pos >= 0; pos--) {
+							if (pos % 8 == i % 8) {
+								if (testGame.getBoard()[pos] == BLANK) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									System.out.println(i + " " + pos);
+								} else if (testGame.getBoard()[pos] <= WHITE_QUEEN) {
+									break;
+								} else if (testGame.getBoard()[pos] > WHITE_QUEEN) {
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									break;
+								}
+							}
+						}
+						
+						int rowPosition = i % 8;
+						if(rowPosition == 0){
+							for(int pos = i + 1; pos < ((i - rowPosition) + 8); pos++){
+								if(testGame.getBoard()[pos] == BLANK){
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									System.out.println(i + " " + pos);
+								}
+							}
+						} else if(rowPosition == 7){
+							for(int pos = i - 1; pos >= (i - rowPosition); pos--){
+								if(testGame.getBoard()[pos] == BLANK){
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									System.out.println(i + " " + pos);
+								}
+							}
+						} else {
+							for(int pos = i + 1; pos < ((i - rowPosition) + 8); pos++){
+								if(testGame.getBoard()[pos] == BLANK){
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									System.out.println(i + " " + pos);
+								}
+							}
+							for(int pos = i - 1; pos >= (i - rowPosition); pos--){
+								if(testGame.getBoard()[pos] == BLANK){
+									moveList.add(new Move(i, pos));
+									testGame = testGame.setGame(game);
+									System.out.println(i + " " + pos);
+								}
+							}
+						}
+						break;
+					case WHITE_BISHOP:
+					case WHITE_KNIGHT:
+					case WHITE_QUEEN:
+					case WHITE_KING:
+					default:
+						break;
+					}
+				}
+			}
+		}
+
+		return moveList;
+	}
+
+	public int[] getBoard() {
+		return board.clone();
+	}
+
+	public void setBoard(int[] board) {
+		this.board = board;
+	}
+
+	public void setPlayer(int player) {
+		currentPlayer = player;
+	}
+
+	public int getPlayer() {
+		return currentPlayer;
+	}
+
+	public void setTurncounter(int turn) {
+		turncounter = turn;
+	}
+
+	public int getTurncounter() {
+		return turncounter;
+	}
+
+	public void setPawnMoves(boolean[] pawnMoves) {
+		pawnFirstMoves = pawnMoves;
+	}
+
+	public boolean[] getPawnMoves() {
+		return pawnFirstMoves.clone();
+	}
+
+	public void setPawnCounter(int[] pawnCounter) {
+		pawnTurncounter = pawnCounter;
+	}
+
+	public int[] getPawnCounter() {
+		return pawnTurncounter.clone();
+	}
+
+	public void setRookMoves(boolean[] rookMoves) {
+		rookFirstMoves = rookMoves;
+	}
+
+	public boolean[] getRookMoves() {
+		return rookFirstMoves.clone();
+	}
+
+	public void setKingMoves(boolean[] kingMoves) {
+		kingFirstMoves = kingMoves;
+	}
+
+	public boolean[] getKingMoves() {
+		return kingFirstMoves.clone();
+	}
+
+	public ChessGame setGame(ChessGame game) {
+
+		ChessGame testGame = new ChessGame();
+
+		testGame.setBoard(game.getBoard());
+		testGame.setTurncounter(game.getTurncounter());
+		testGame.setPlayer(game.getPlayer());
+		testGame.setPawnMoves(game.getPawnMoves());
+		testGame.setPawnCounter(game.getPawnCounter());
+		testGame.setRookMoves(game.getRookMoves());
+		testGame.setKingMoves(game.getKingMoves());
+
+		return testGame;
+	}
+}

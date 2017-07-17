@@ -1,0 +1,591 @@
+package chessAgentV1;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+public class TestQueen {
+
+	private ChessGame testGame = new ChessGame();
+	
+	@Test
+	public void queenMoveMinus9(){
+		int[] board = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,8,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0};
+		
+		int[] expectedBoard = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,8,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,};
+		testGame.setupBoard();
+		testGame.setBoard(board);
+		testGame.setPlayer(ChessGame.WHITE_PLAYER);
+		assertTrue(testGame.moveCheck(27, 9));
+		
+		assertArrayEquals(expectedBoard, testGame.getBoard());
+	}
+	
+	@Test
+	public void queenMoveMinus8(){
+		int[] board = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,8,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0};
+		
+		int[] expectedBoard = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,8,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,};
+		testGame.setupBoard();
+		testGame.setBoard(board);
+		testGame.setPlayer(ChessGame.WHITE_PLAYER);
+		assertTrue(testGame.moveCheck(27, 11));
+		
+		assertArrayEquals(expectedBoard, testGame.getBoard());
+	}
+	
+	@Test
+	public void queenMoveMinus7(){
+		int[] board = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,8,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0};
+		
+		int[] expectedBoard = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,8,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,};
+		testGame.setupBoard();
+		testGame.setBoard(board);
+		testGame.setPlayer(ChessGame.WHITE_PLAYER);
+		assertTrue(testGame.moveCheck(27, 13));
+		
+		assertArrayEquals(expectedBoard, testGame.getBoard());
+	}
+	
+	@Test
+	public void queenMoveMinus1(){
+		int[] board = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,8,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0};
+		
+		int[] expectedBoard = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 8,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,};
+		testGame.setupBoard();
+		testGame.setBoard(board);
+		testGame.setPlayer(ChessGame.WHITE_PLAYER);
+		assertTrue(testGame.moveCheck(27, 24));
+		
+		assertArrayEquals(expectedBoard, testGame.getBoard());
+	}
+	
+	@Test
+	public void queenMovePlus1(){
+		int[] board = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,8,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0};
+		
+		int[] expectedBoard = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,8,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,};
+		testGame.setupBoard();
+		testGame.setBoard(board);
+		testGame.setPlayer(ChessGame.WHITE_PLAYER);
+		assertTrue(testGame.moveCheck(27, 30));
+		
+		assertArrayEquals(expectedBoard, testGame.getBoard());
+	}
+	
+	@Test
+	public void queenMovePlus7(){
+		int[] board = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,8,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0};
+		
+		int[] expectedBoard = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,8,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,};
+		testGame.setupBoard();
+		testGame.setBoard(board);
+		testGame.setPlayer(ChessGame.WHITE_PLAYER);
+		assertTrue(testGame.moveCheck(27, 41));
+		
+		assertArrayEquals(expectedBoard, testGame.getBoard());
+	}
+	
+	@Test
+	public void queenMovePlus8(){
+		int[] board = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,8,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0};
+		
+		int[] expectedBoard = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,8,0,0,0,0,
+				 0,0,0,0,0,0,0,0,};
+		testGame.setupBoard();
+		testGame.setBoard(board);
+		testGame.setPlayer(ChessGame.WHITE_PLAYER);
+		assertTrue(testGame.moveCheck(27, 51));
+		
+		assertArrayEquals(expectedBoard, testGame.getBoard());
+	}
+	
+	@Test
+	public void queenMovePlus9(){
+		int[] board = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,8,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0};
+		
+		int[] expectedBoard = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,8,0,
+				 0,0,0,0,0,0,0,0,};
+		testGame.setupBoard();
+		testGame.setBoard(board);
+		testGame.setPlayer(ChessGame.WHITE_PLAYER);
+		assertTrue(testGame.moveCheck(27, 54));
+		
+		assertArrayEquals(expectedBoard, testGame.getBoard());
+	}
+	
+	@Test
+	public void queenBlockedMinus9(){
+		int[] board = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,8,0,0,0,0,0,
+				 0,0,0,8,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0};
+		
+		int[] expectedBoard = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,8,0,0,0,0,0,
+				 0,0,0,8,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,};
+		testGame.setupBoard();
+		testGame.setBoard(board);
+		testGame.setPlayer(ChessGame.WHITE_PLAYER);
+		assertFalse(testGame.moveCheck(27, 9));
+		
+		assertArrayEquals(expectedBoard, testGame.getBoard());
+	}
+	
+	@Test
+	public void queenBlockedMinus8(){
+		int[] board = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,8,0,0,0,0,
+				 0,0,0,8,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0};
+		
+		int[] expectedBoard = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,8,0,0,0,0,
+				 0,0,0,8,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,};
+		testGame.setupBoard();
+		testGame.setBoard(board);
+		testGame.setPlayer(ChessGame.WHITE_PLAYER);
+		assertFalse(testGame.moveCheck(27, 11));
+		
+		assertArrayEquals(expectedBoard, testGame.getBoard());
+	}
+	
+	@Test
+	public void queenBlockedMinus7(){
+		int[] board = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,8,0,0,0,
+				 0,0,0,8,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0};
+		
+		int[] expectedBoard = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,8,0,0,0,
+				 0,0,0,8,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,};
+		testGame.setupBoard();
+		testGame.setBoard(board);
+		testGame.setPlayer(ChessGame.WHITE_PLAYER);
+		assertFalse(testGame.moveCheck(27, 13));
+		
+		assertArrayEquals(expectedBoard, testGame.getBoard());
+	}
+	
+	@Test
+	public void queenBlockedMinus1(){
+		int[] board = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,8,8,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0};
+		
+		int[] expectedBoard = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,8,8,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,};
+		testGame.setupBoard();
+		testGame.setBoard(board);
+		testGame.setPlayer(ChessGame.WHITE_PLAYER);
+		assertFalse(testGame.moveCheck(27, 24));
+		
+		assertArrayEquals(expectedBoard, testGame.getBoard());
+	}
+	
+	@Test
+	public void queenBlockedPlus1(){
+		int[] board = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,8,8,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0};
+		
+		int[] expectedBoard = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,8,8,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,};
+		testGame.setupBoard();
+		testGame.setBoard(board);
+		testGame.setPlayer(ChessGame.WHITE_PLAYER);
+		assertFalse(testGame.moveCheck(27, 30));
+		
+		assertArrayEquals(expectedBoard, testGame.getBoard());
+	}
+	
+	@Test
+	public void queenBlockedPlus7(){
+		int[] board = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,8,0,0,0,0,
+				 0,0,8,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0};
+		
+		int[] expectedBoard = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,8,0,0,0,0,
+				 0,0,8,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,};
+		testGame.setupBoard();
+		testGame.setBoard(board);
+		testGame.setPlayer(ChessGame.WHITE_PLAYER);
+		assertFalse(testGame.moveCheck(27, 41));
+		
+		assertArrayEquals(expectedBoard, testGame.getBoard());
+	}
+	
+	@Test
+	public void queenBlockedPlus8(){
+		int[] board = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,8,0,0,0,0,
+				 0,0,0,8,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0};
+		
+		int[] expectedBoard = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,8,0,0,0,0,
+				 0,0,0,8,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,};
+		testGame.setupBoard();
+		testGame.setBoard(board);
+		testGame.setPlayer(ChessGame.WHITE_PLAYER);
+		assertFalse(testGame.moveCheck(27, 51));
+		
+		assertArrayEquals(expectedBoard, testGame.getBoard());
+	}
+	
+	@Test
+	public void queenBlockedPlus9(){
+		int[] board = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,8,0,0,0,0,
+				 0,0,0,0,8,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0};
+		
+		int[] expectedBoard = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,8,0,0,0,0,
+				 0,0,0,0,8,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,};
+		testGame.setupBoard();
+		testGame.setBoard(board);
+		testGame.setPlayer(ChessGame.WHITE_PLAYER);
+		assertFalse(testGame.moveCheck(27, 54));
+		
+		assertArrayEquals(expectedBoard, testGame.getBoard());
+	}
+	
+	@Test
+	public void queenIllegalMinus9(){
+		int[] board = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 8,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0};
+		
+		int[] expectedBoard = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 8,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,};
+		testGame.setupBoard();
+		testGame.setBoard(board);
+		testGame.setPlayer(ChessGame.WHITE_PLAYER);
+		assertFalse(testGame.moveCheck(24, 15));
+		
+		assertArrayEquals(expectedBoard, testGame.getBoard());
+	}
+	
+	@Test
+	public void queenIllegalMinus1(){
+		int[] board = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 8,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0};
+		
+		int[] expectedBoard = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 8,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,};
+		testGame.setupBoard();
+		testGame.setBoard(board);
+		testGame.setPlayer(ChessGame.WHITE_PLAYER);
+		assertFalse(testGame.moveCheck(24, 23));
+		
+		assertArrayEquals(expectedBoard, testGame.getBoard());
+	}
+	
+	@Test
+	public void queenIllegalPlus7(){
+		int[] board = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 8,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0};
+		
+		int[] expectedBoard = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 8,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,};
+		testGame.setupBoard();
+		testGame.setBoard(board);
+		testGame.setPlayer(ChessGame.WHITE_PLAYER);
+		assertFalse(testGame.moveCheck(24, 31));
+		
+		assertArrayEquals(expectedBoard, testGame.getBoard());
+	}
+	
+	@Test
+	public void queenIllegalMinus7(){
+		int[] board = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 8,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0};
+		
+		int[] expectedBoard = new int[] 
+				{0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 8,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,
+				 0,0,0,0,0,0,0,0,};
+		testGame.setupBoard();
+		testGame.setBoard(board);
+		testGame.setPlayer(ChessGame.WHITE_PLAYER);
+		assertFalse(testGame.moveCheck(24, 15));
+		
+		assertArrayEquals(expectedBoard, testGame.getBoard());
+	}
+
+}
