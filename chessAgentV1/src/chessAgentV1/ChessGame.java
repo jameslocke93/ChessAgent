@@ -1771,4 +1771,12 @@ public class ChessGame {
 
 		return testGame;
 	}
+
+	public void changePlayer(ChessGame game) {
+		if (game.getPlayer() == WHITE_PLAYER) {
+			game.setPlayer(BLACK_PLAYER);
+		} else {
+			game.setPlayer(WHITE_PLAYER);
+		}
+	}
 }
