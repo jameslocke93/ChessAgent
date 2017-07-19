@@ -895,6 +895,22 @@ public class ChessGame {
 
 		return false;
 	}
+	
+	public boolean kingCheck(){
+
+		for(int i = 0; i < board.length; i++){
+			if(currentPlayer == WHITE_PLAYER){
+				if(board[i] == BLACK_KING){
+					return false;
+				}
+			} else {
+				if(board[i] == WHITE_KING){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
 
 	public boolean checkMate(ChessGame game) {
 
