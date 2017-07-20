@@ -13,7 +13,8 @@ public class Game {
 	public static void main(String[] args) {
 		Game game = new Game();
 
-		game.playerVsPlayer();
+		//game.playerVsPlayer();
+		game.playerVsMCTS();
 	}
 
 	public void playerVsPlayer() {
@@ -39,7 +40,14 @@ public class Game {
 		}
 
 	}
-
+	
+	public void playerVsMCTS(){
+		MonteCarlo machine = new MonteCarlo(game, 60);
+		
+		machine.generateMove();
+		
+	}
+	
 	public void printBoard(ChessGame game) {
 
 		for (int i = 0; i < game.getBoard().length; i++) {
