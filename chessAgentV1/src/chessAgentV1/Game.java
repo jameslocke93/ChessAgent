@@ -42,7 +42,7 @@ public class Game {
 	}
 	
 	public void playerVsMCTS(){
-		MonteCarlo machine = new MonteCarlo(game, 5);
+		MonteCarlo machine = new MonteCarlo(game, 60);
 		
 		machine.generateMove();
 		
