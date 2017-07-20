@@ -357,110 +357,60 @@ public class ChessGame {
 	private boolean moveRook(int position, int destination) {
 
 		boolean blocked = false;
+		int rowPosition = position % 8;
 
 		// Check if the movement is forward/backwards
 		if (position % 8 == destination % 8) {
 			if (position < destination) {
-				for (int i = position + 1; i < destination; i++) {
-					if (i % 8 == position % 8) {
+				int i = position + 1;
+				while (!blocked && i < destination) {
+					if(i % 8 == position % 8){
 						if (board[i] != BLANK) {
 							blocked = true;
 						}
 					}
+					i++;
 				}
 			} else {
-				for (int i = position - 1; i > destination; i--) {
-					if (i % 8 == position % 8) {
+				int i = position - 1;
+				while (!blocked && i > destination) {
+					if(i % 8 == position % 8){
 						if (board[i] != BLANK) {
 							blocked = true;
 						}
 					}
+					i--;
 				}
 			}
-		} else if (position >= 56) {
-			if (destination < 56 + 8) {
-				for (int i = position + 1; i < destination; i++) {
-					if (board[i] != BLANK) {
-						blocked = true;
-					}
-				}
-			} else {
-				return false;
+			
+			if (!blocked) {
+				return move(position, destination);
 			}
-		} else if (position >= 48) {
-			if (destination < 48 + 8) {
-				for (int i = position + 1; i < destination; i++) {
-					if (board[i] != BLANK) {
-						blocked = true;
-					}
-				}
-			} else {
-				return false;
-			}
-		} else if (position >= 40) {
-			if (destination < 40 + 8) {
-				for (int i = position + 1; i < destination; i++) {
-					if (board[i] != BLANK) {
-						blocked = true;
-					}
-				}
-			} else {
-				return false;
-			}
-		} else if (position >= 32) {
-			if (destination < 32 + 8) {
-				for (int i = position + 1; i < destination; i++) {
-					if (board[i] != BLANK) {
-						blocked = true;
-					}
-				}
-			} else {
-				return false;
-			}
-		} else if (position >= 24) {
-			if (destination < 24 + 8) {
-				for (int i = position + 1; i < destination; i++) {
-					if (board[i] != BLANK) {
-						blocked = true;
-					}
-				}
-			} else {
-				return false;
-			}
-		} else if (position >= 16) {
-			if (destination < 16 + 8) {
-				for (int i = position + 1; i < destination; i++) {
-					if (board[i] != BLANK) {
-						blocked = true;
-					}
-				}
-			} else {
-				return false;
-			}
-		} else if (position >= 8) {
-			if (destination < 8 + 8) {
-				for (int i = position + 1; i < destination; i++) {
-					if (board[i] != BLANK) {
-						blocked = true;
-					}
-				}
-			} else {
-				return false;
-			}
-		} else {
-			if (destination < 0 + 8) {
-				for (int i = position + 1; i < destination; i++) {
-					if (board[i] != BLANK) {
-						blocked = true;
-					}
-				}
-			} else {
-				return false;
-			}
-		}
+		} else if (destination >= (position - rowPosition) && destination < ((position - rowPosition) + 8)) {
 
-		if (!blocked) {
-			return move(position, destination);
+			blocked = false;
+
+			if (position < destination) {
+				int i = position + 1;
+				while (!blocked && i < destination) {
+					if (board[i] != BLANK) {
+						blocked = true;
+					}
+					i++;
+				}
+			} else {
+				int i = position - 1;
+				while (!blocked && i > destination) {
+					if (board[i] != BLANK) {
+						blocked = true;
+					}
+					i--;
+				}
+			}
+
+			if (!blocked) {
+				return move(position, destination);
+			}
 		}
 
 		return false;
@@ -522,68 +472,79 @@ public class ChessGame {
 	private boolean moveBishop(int position, int destination) {
 
 		int rowPosition = position % 8;
-		int distance = position - destination;
+		boolean blocked = false;
 
 		if (rowPosition == 0) {
-			if (distance % 9 == 0) {
+			if (position % 9 == destination % 9) {
 				if (position > destination) {
 					return false;
 				}
-			} else if (distance % 7 == 0) {
+			} else if (position % 7 == destination % 7) {
 				if (position < destination) {
 					return false;
 				}
 			}
 		} else if (rowPosition == 7) {
-			if (distance % 9 == 0) {
+			if (position % 9 == destination % 9) {
 				if (position < destination) {
 					return false;
 				}
-			} else if (distance % 7 == 0) {
+			} else if (position % 7 == destination % 7) {
 				if (position > destination) {
 					return false;
 				}
 			}
 		}
 
-		if (distance % 9 == 0) {
+		if (position % 9 == destination % 9) {
 			if (position < destination) {
-				for (int i = position + 1; i < destination; i++) {
+				int  i = position + 1;
+				while(!blocked && i < destination){
 					if (i % 9 == position % 9) {
 						if (board[i] != BLANK) {
-							return false;
+							blocked = true;
 						}
 					}
+					i++;
 				}
-				return move(position, destination);
 			} else {
-				for (int i = position - 1; i > destination; i--) {
+				int  i = position - 1;
+				while(!blocked && i > destination){
 					if (i % 9 == position % 9) {
 						if (board[i] != BLANK) {
-							return false;
+							blocked = true;
 						}
 					}
+					i--;
 				}
+			}
+			
+			if(!blocked){
 				return move(position, destination);
 			}
-		} else if (distance % 7 == 0) {
+		} else if (position % 7 == destination % 7) {
 			if (position < destination) {
-				for (int i = position + 1; i < destination; i++) {
+				int  i = position + 1;
+				while(!blocked && i < destination){
 					if (i % 7 == position % 7) {
 						if (board[i] != BLANK) {
-							return false;
+							blocked = true;
 						}
 					}
+					i++;
 				}
-				return move(position, destination);
 			} else {
-				for (int i = position - 1; i > destination; i--) {
+				int  i = position - 1;
+				while(!blocked && i > destination){
 					if (i % 7 == position % 7) {
 						if (board[i] != BLANK) {
-							return false;
+							blocked = true;
 						}
 					}
+					i--;
 				}
+			}
+			if(!blocked){
 				return move(position, destination);
 			}
 		}
@@ -895,16 +856,16 @@ public class ChessGame {
 
 		return false;
 	}
-	
-	public boolean kingCheck(){
 
-		for(int i = 0; i < board.length; i++){
-			if(currentPlayer == WHITE_PLAYER){
-				if(board[i] == BLACK_KING){
+	public boolean kingCheck() {
+
+		for (int i = 0; i < board.length; i++) {
+			if (currentPlayer == WHITE_PLAYER) {
+				if (board[i] == BLACK_KING) {
 					return false;
 				}
 			} else {
-				if(board[i] == WHITE_KING){
+				if (board[i] == WHITE_KING) {
 					return false;
 				}
 			}
